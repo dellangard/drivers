@@ -42,12 +42,12 @@ typedef struct
     const TickType_t deglitching_time_ticks;
     const TickType_t long_press_ticks;  //'long_press_ticks' value must be greatr than 'deglitching_time_ticks' value
 
+    const uint8_t event_queue_length;   //Length of button event queue
+
     volatile button_events_t last_state;
 
     //Timer for deglitching and short/long press event determining
     TimerHandle_t xButtonTimer;
-
-    BaseType_t *pxHigherPriorityTaskWoken;
 
     //Queue for storing button event(s)
     QueueHandle_t xButtonEventQueue;

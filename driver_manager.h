@@ -10,6 +10,8 @@
 
 #include <libopencm3/stm32/exti.h>
 
+#include "mcu/mcu_gpio.h"
+
 //Driver linked list structure type definition
 typedef struct
 {
@@ -42,7 +44,9 @@ typedef struct
 
 void exti_manager_init(void);
 
-enum driver_register_result exti_manager_register_handler(uint32_t *instance_handle, void *callback_ptr, uint8_t exti_number);
+uint8_t exti_manager_get_exti_nvic_vector(gpio_t *gpio);
+
+enum driver_register_result exti_manager_register_handler(void *instance_handle, void *callback_ptr, gpio_t *gpio);
 
 enum driver_register_result driver_manager_register_driver(const char* driver_name_string, const uint32_t* driver_handle);
 

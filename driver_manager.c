@@ -49,6 +49,8 @@ static const uint8_t exti_nvic_vectors[EXTI_MAX_COUNT] = {
 
 static void exti_manager_set_callback(uint8_t exti_number, void *callback_ptr);
 
+uint8_t log2s(uint32_t power_of_two);
+
 
 //Void callback for unhandled EXTI interrupts
 static void exti_void_callback(void*);
@@ -59,31 +61,31 @@ static void exti_void_callback(void* any_param)
 }
 
 //EXTI callback declarations
-void (*exti_0_callback)(void*);
-void (*exti_1_callback)(void*);
-void (*exti_2_callback)(void*);
-void (*exti_3_callback)(void*);
-void (*exti_4_callback)(void*);
-void (*exti_5_callback)(void*);
-void (*exti_6_callback)(void*);
-void (*exti_7_callback)(void*);
-void (*exti_8_callback)(void*);
-void (*exti_9_callback)(void*);
-void (*exti_10_callback)(void*);
-void (*exti_11_callback)(void*);
-void (*exti_12_callback)(void*);
-void (*exti_13_callback)(void*);
-void (*exti_14_callback)(void*);
-void (*exti_15_callback)(void*);
+void (*exti_0_callback)(void*, void*);
+void (*exti_1_callback)(void*, void*);
+void (*exti_2_callback)(void*, void*);
+void (*exti_3_callback)(void*, void*);
+void (*exti_4_callback)(void*, void*);
+void (*exti_5_callback)(void*, void*);
+void (*exti_6_callback)(void*, void*);
+void (*exti_7_callback)(void*, void*);
+void (*exti_8_callback)(void*, void*);
+void (*exti_9_callback)(void*, void*);
+void (*exti_10_callback)(void*, void*);
+void (*exti_11_callback)(void*, void*);
+void (*exti_12_callback)(void*, void*);
+void (*exti_13_callback)(void*, void*);
+void (*exti_14_callback)(void*, void*);
+void (*exti_15_callback)(void*, void*);
 
-//void (*exti_16_callback)(void*);
-//void (*exti_17_callback)(void*);
-//void (*exti_18_callback)(void*);
-//void (*exti_19_callback)(void*);
-//void (*exti_20_callback)(void*);
-//void (*exti_21_callback)(void*);
-//void (*exti_22_callback)(void*);
-//void (*exti_23_callback)(void*);
+//void (*exti_16_callback)(void*, void*);
+//void (*exti_17_callback)(void*, void*);
+//void (*exti_18_callback)(void*, void*);
+//void (*exti_19_callback)(void*, void*);
+//void (*exti_20_callback)(void*, void*);
+//void (*exti_21_callback)(void*, void*);
+//void (*exti_22_callback)(void*, void*);
+//void (*exti_23_callback)(void*, void*);
 
 
 
@@ -93,7 +95,7 @@ void EXTI0_IRQHandler(void)
 {
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
-    exti_0_callback(&xHigherPriorityTaskWoken);
+    exti_0_callback(&xHigherPriorityTaskWoken, exti_handlers[0]);
 
     exti_reset_request(EXTI0);
 
@@ -104,7 +106,7 @@ void EXTI1_IRQHandler(void)
 {
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
-    exti_1_callback(&xHigherPriorityTaskWoken);
+    exti_1_callback(&xHigherPriorityTaskWoken, exti_handlers[1]);
 
     exti_reset_request(EXTI1);
 
@@ -115,7 +117,7 @@ void EXTI2_IRQHandler(void)
 {
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
-    exti_2_callback(&xHigherPriorityTaskWoken);
+    exti_2_callback(&xHigherPriorityTaskWoken, exti_handlers[2]);
 
     exti_reset_request(EXTI2);
 
@@ -126,7 +128,7 @@ void EXTI3_IRQHandler(void)
 {
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
-    exti_3_callback(&xHigherPriorityTaskWoken);
+    exti_3_callback(&xHigherPriorityTaskWoken, exti_handlers[3]);
 
     exti_reset_request(EXTI3);
 
@@ -137,7 +139,7 @@ void EXTI4_IRQHandler(void)
 {
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
-    exti_4_callback(&xHigherPriorityTaskWoken);
+    exti_4_callback(&xHigherPriorityTaskWoken, exti_handlers[4]);
 
     exti_reset_request(EXTI4);
 
@@ -148,34 +150,39 @@ void EXTI9_5_IRQHandler(void)
 {
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
-//    uint16_t timer_us10 = tim7_get_value();
-
     //EXTI 5
     if(exti_get_flag_status(EXTI5))
     {
-        exti_5_callback(&xHigherPriorityTaskWoken);
+        exti_5_callback(&xHigherPriorityTaskWoken, exti_handlers[5]);
         exti_reset_request(EXTI5);
     }
 
     //EXTI 6
     if(exti_get_flag_status(EXTI6))
     {
-        exti_6_callback(&xHigherPriorityTaskWoken);
+        exti_6_callback(&xHigherPriorityTaskWoken, exti_handlers[6]);
         exti_reset_request(EXTI6);
     }
 
     //EXTI 7
     if(exti_get_flag_status(EXTI7))
     {
-        exti_7_callback(&xHigherPriorityTaskWoken);
+        exti_7_callback(&xHigherPriorityTaskWoken, exti_handlers[7]);
         exti_reset_request(EXTI7);
     }
 
     //EXTI 8
     if(exti_get_flag_status(EXTI8))
     {
-        exti_8_callback(&xHigherPriorityTaskWoken);
+        exti_8_callback(&xHigherPriorityTaskWoken, exti_handlers[8]);
         exti_reset_request(EXTI8);
+    }
+
+    //EXTI 9
+    if(exti_get_flag_status(EXTI9))
+    {
+        exti_9_callback(&xHigherPriorityTaskWoken, exti_handlers[9]);
+        exti_reset_request(EXTI9);
     }
 
     //Switch FreeRTOS context after leaving ISR if high priority task is pending
@@ -186,47 +193,45 @@ void EXTI15_10_IRQHandler(void)
 {
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
-//    uint16_t timer_us10 = tim7_get_value();
-
     //EXTI 10
     if(exti_get_flag_status(EXTI10))
     {
-        exti_10_callback(&xHigherPriorityTaskWoken);
+        exti_10_callback(&xHigherPriorityTaskWoken, exti_handlers[10]);
         exti_reset_request(EXTI10);
     }
 
     //EXTI 11
     if(exti_get_flag_status(EXTI11))
     {
-        exti_11_callback(&xHigherPriorityTaskWoken);
+        exti_11_callback(&xHigherPriorityTaskWoken, exti_handlers[11]);
         exti_reset_request(EXTI11);
     }
 
     //EXTI 12
     if(exti_get_flag_status(EXTI12))
     {
-        exti_12_callback(&xHigherPriorityTaskWoken);
+        exti_12_callback(&xHigherPriorityTaskWoken, exti_handlers[12]);
         exti_reset_request(EXTI12);
     }
 
     //EXTI 13
     if(exti_get_flag_status(EXTI13))
     {
-        exti_13_callback(&xHigherPriorityTaskWoken);
+        exti_13_callback(&xHigherPriorityTaskWoken, exti_handlers[13]);
         exti_reset_request(EXTI13);
     }
 
     //EXTI 14
     if(exti_get_flag_status(EXTI14))
     {
-        exti_14_callback(&xHigherPriorityTaskWoken);
+        exti_14_callback(&xHigherPriorityTaskWoken, exti_handlers[14]);
         exti_reset_request(EXTI14);
     }
 
     //EXTI 15
     if(exti_get_flag_status(EXTI15))
     {
-        exti_15_callback(&xHigherPriorityTaskWoken);
+        exti_15_callback(&xHigherPriorityTaskWoken, exti_handlers[15]);
         exti_reset_request(EXTI15);
     }
 
@@ -362,22 +367,25 @@ static void exti_manager_set_callback(uint8_t exti_number, void *callback_ptr)
 }
 
 
-uint8_t exti_manager_get_exti_nvic_vector(uint8_t exti_number)
+uint8_t exti_manager_get_exti_nvic_vector(gpio_t *gpio)
 {
+    uint8_t exti_number = log2s(gpio->pin);
     //ToDo: Add range check
 
     return exti_nvic_vectors[exti_number];
 }
 
 
-enum driver_register_result exti_manager_register_handler(uint32_t *instance_handle, void *callback_ptr, uint8_t exti_number)
+enum driver_register_result exti_manager_register_handler(void *instance_handle, void *callback_ptr, gpio_t *gpio)
 {
+    uint8_t exti_number = log2s(gpio->pin);
+
     //If exti_number is unhandled
     if(exti_manager_get_exti_handler_instance(exti_number) == NULL)
     {
-        exti_disable_request((uint32_t)(1 << exti_number));
+        exti_disable_request((uint32_t)(gpio->pin));
 
-        exti_reset_request((uint32_t)(1 << exti_number));
+        exti_reset_request((uint32_t)(gpio->pin));
 
         //Add handler instance
         exti_handlers[exti_number] = instance_handle;
